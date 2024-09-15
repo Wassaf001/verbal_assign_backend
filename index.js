@@ -23,12 +23,8 @@ const upload = multer({ storage: multer.memoryStorage() });
 // Route to handle PDF file upload and text extraction
 app.post('/extract-text', upload.single('pdf'), async (req, res) => {
   try {
-    const filePath = path.join(__dirname, 'uploads', req.file.filename);
-    const dataBuffer = fs.readFileSync(filePath);
+    const dataBuffer = req.file.buffer;  // Use buffer directly from memory
     const data = await pdfParse(dataBuffer);
-
-    // Clean up the uploaded file
-    fs.unlinkSync(filePath);
 
     res.json({ text: data.text });
   } catch (error) {
@@ -36,6 +32,7 @@ app.post('/extract-text', upload.single('pdf'), async (req, res) => {
     res.status(500).json({ error: 'Failed to extract text from PDF.' });
   }
 });
+
 
 // Start the server
 app.listen(port, () => {
