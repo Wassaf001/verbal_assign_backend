@@ -18,7 +18,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Set up multer for file uploads
-const upload = multer({ dest: 'uploads/' });
+const upload = multer({ storage: multer.memoryStorage() });
 
 // Route to handle PDF file upload and text extraction
 app.post('/extract-text', upload.single('pdf'), async (req, res) => {
